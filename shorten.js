@@ -1,6 +1,6 @@
-var __AUTH_DOMAIN = "mnkyit-706c6"
-var __DB_URL = "mnkyit-706c6-default-rtdb"
 
+
+var axios = require('axios')
 var firebase = require("firebase")
 var config = {
     apiKey: "apiKey",
@@ -23,8 +23,23 @@ function exists(GUID){
     })
 }
 
-let urlregex = new RegExp(/[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi);
+let urlRegEx = new RegExp(/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi);
 let characters = "🙊,🙉,🙈,🐒,🐵,🍌​​".split(",")
+
+async function isValidUrl(url){
+    if (!url.match(urlRegEx)) return false;
+
+    let test1, test2;
+    if (url.substring(0,6)!="https:" && url.substring(0,5)!="http:") {
+        test1 = "https://" + url;
+        test2 = "http://" + url;
+    }
+    
+    let res1 = await axios.get(test1)
+    let res2 = await axios.get(test2)
+
+    return (res1 != null || res2 != null);
+}
 
 async function genUID(){
     let uid = "";
@@ -40,7 +55,8 @@ async function genUID(){
 }
 
 async function generate(url){
-    if (url.match(urlregex)){
+    let response = await isValidUrl (url);
+    if (response != null){
         let uid = await genUID();
         if (uid){
             database.ref().child("monkeys").update({[uid]:url})

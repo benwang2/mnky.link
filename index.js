@@ -11,7 +11,8 @@ app.use("/shorten", rateLimit({windowMs: 5 * 1000,max: 10}));
 app.use(express.json({limit:'1mb'}))
 app.post("/shorten", async (request, response) => {
     try {
-        let monkeys = await shorten.generate(request.body.url);
+        let destination = request.body.url
+        let monkeys = await shorten.generate(destination);
         if (monkeys != 504 && monkeys != 400){
             response.json({
                 status:200,
@@ -37,9 +38,6 @@ app.get("/:monkeys", async (request, response) => {
         let monkeys = request.params.monkeys;
         let destination = await shorten.exists(monkeys)
         if (destination){
-            if (!/^https?:\/\//i.test(destination)) {
-                destination = "https://" + destination;
-            }
             response.redirect(destination)
         } else {response.redirect("/")}
     } catch (e) {
