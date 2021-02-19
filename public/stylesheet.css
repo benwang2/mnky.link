@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400&family=Truculenta:wght@300;400;700&display=swap');
+
+html, body {
+    height: 95%;
+    background-color: #272727;
+    color: aliceblue;
+    transition: all 0.2s ease;
+    font-family: 'Truculenta', sans-serif;
+}
+
+h1, h2, h3 {
+    font-weight: 700;
+    color: #14a76c;
+    margin: 0;
+}
+
+h1 {font-size: 3rem;}
+h2 {font-size: 2rem;}
+
+p {
+    color: rgb(185, 190, 194);
+    margin: 0;
+    font-weight: 300;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+    height: 100%;
+    width: 60%;
+}
+
+.row {
+    display: flex;
+    flex-shrink: 0;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.textbox {
+    display: flex;
+    font-size: 1rem;
+    font-family: 'Roboto', sans-serif;
+    color: aliceblue;
+    margin: 10px;
+    width: 70%; height: 40px;
+    max-width: 584px;
+    background-color: #4b4b4b;
+    border-radius: 6px;  border-width: 2px;
+    padding-left: 16px; padding-right: 16px;
+    border-color: rgba(20, 167, 108,0);
+    outline: none;
+    transition: border-color 0.2s ease, background-color .5s ease;
+}
+
+.textbox:focus {
+    border-color: rgba(20, 167, 108, 1);
+}
+
+button {
+    display: flex;
+    background-color: #14a76c;
+    text-align: center;
+    font-family: 'Truculenta', sans-serif; font-size: 1.5rem; color: aliceblue;
+    border-color: rgba(11, 83, 54,0); border-width: 2px; border-radius: 6px;
+    outline: none;
+    padding: 2px; padding-left: 10px;
+    height: 44px;
+    width: 90px;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    cursor: pointer;
+}
+
+button:hover{
+    background-color: #17be7c;
+}
+
+@keyframes shake {
+    10%, 90% {
+        transform: translate3d(-1px, 0, 0);
+    }
+    20%, 80% {
+        transform: translate3d(2px, 0, 0);
+    }
+    30%, 50%, 70% {
+        transform: translate3d(-4px, 0, 0);
+    }
+    40%, 60% {
+        transform: translate3d(4px, 0, 0);
+    }
+}
+
+.github-corner:hover .octo-arm {
+    animation: octocat-wave 560ms ease-in-out;
+}
+
+@keyframes octocat-wave {
+    0% {
+        transform: rotate(0deg);
+    }
+    20% {
+        transform: rotate(-25deg);
+    }
+    40% {
+        transform: rotate(10deg);
+    }
+    60% {
+        transform: rotate(-25deg);
+    }
+    80% {
+        transform: rotate(10deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+@media (max-width: 500px) {
+    .github-corner:hover .octo-arm {
+        animation: none;
+    }
+    .github-corner .octo-arm {
+        animation: octocat-wave 560ms ease-in-out;
+    }
+}
