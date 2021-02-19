@@ -1,9 +1,7 @@
-<<<<<<< HEAD
-
+var __AUTH_DOMAIN = "mnky-link"
+var __DB_URL = "mnky-link-default-rtdb"
 
 var axios = require('axios')
-=======
->>>>>>> 63ec09b74033a503faf4f7379ac60652c5becda6
 var firebase = require("firebase")
 var config = {
     apiKey: "apiKey",
@@ -30,6 +28,7 @@ let urlRegEx = new RegExp(/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{
 let characters = "🙊,🙉,🙈,🐒,🐵,🍌​​".split(",")
 
 async function isValidUrl(url){
+    if (url.trim()=="") return false;
     if (!url.match(urlRegEx)) return false;
 
     let test1, test2;
@@ -41,7 +40,8 @@ async function isValidUrl(url){
     let res1 = await axios.get(test1)
     let res2 = await axios.get(test2)
 
-    return (res1 != null || res2 != null);
+    console.log((res1 != null ? res1 : (res2 != null ? res2 : false)))
+    return (res1 != null ? res1 : (res2 != null ? res2 : false));
 }
 
 async function genUID(){
@@ -62,7 +62,7 @@ async function generate(url){
     if (response != null){
         let uid = await genUID();
         if (uid){
-            database.ref().child("monkeys").update({[uid]:url})
+            database.ref().child("monkeys").update({[uid]:response})
             return uid;
         } else {
             return 504
