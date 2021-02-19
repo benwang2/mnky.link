@@ -1,6 +1,3 @@
-var __AUTH_DOMAIN = "mnky-link"
-var __DB_URL = "mnky-link-default-rtdb"
-
 var axios = require('axios')
 var firebase = require("firebase")
 var config = {
