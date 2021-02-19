@@ -1,6 +1,9 @@
+<<<<<<< HEAD
 
 
 var axios = require('axios')
+=======
+>>>>>>> 63ec09b74033a503faf4f7379ac60652c5becda6
 var firebase = require("firebase")
 var config = {
     apiKey: "apiKey",
