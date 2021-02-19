@@ -1,6 +1,3 @@
-var __AUTH_DOMAIN = "mnkyit-706c6"
-var __DB_URL = "mnkyit-706c6-default-rtdb"
-
 var firebase = require("firebase")
 var config = {
     apiKey: "apiKey",
