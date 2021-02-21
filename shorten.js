@@ -30,21 +30,20 @@ let characters = "🙊,🙉,🙈,🐒,🐵,🍌,💩​​".split(",")
 async function getValidUrl(url){
     if (url.trim()=="") return false;
     if (!url.match(urlRegEx)) return false;
-
-    if (url.substring(0,6)!="https:" && url.substring(0,5)!="http:") {
-        let [test1, test2, validUrl] = ["https://" + url, "http://" + url, false];
-        try {
-            let res1 = await axios.get(test1)
-            let res2 = await axios.get(test2)
+    try {
+        if (url.substring(0,6)!="https:" && url.substring(0,5)!="http:") {
+            let [test1, test2, validUrl] = ["https://" + url, "http://" + url, false];
+            let [res1, res2]  = [await axios.get(test1), await axios.get(test2)]
             validUrl = (res1 != null ? test1 : (res2 != null ? test2 : false));
-        } catch (e) {
-            validUrl = e.request.finished ? e.request.protocol+"//"+e.request.host : false
+        } else {
+            let res1 = await axios.get(url)
+            validUrl = (res1 != null ? url : false)
         }
-        return validUrl
-    } else {
-        let res1 = await axios.get(url)
-        return (res1 != null ? url : false)
+    } catch (e) {
+
+        validUrl = e.request.finished ? e.request._redirectable._currentUrl : false
     }
+    return validUrl
 }
 
 async function genUID(){
@@ -64,7 +63,6 @@ async function generate(url){
     let response = await getValidUrl (url);
     console.log("url is: "+response)
     if (response != null && response != false){
-        console.log('passed response check')
         let uid = await genUID();
         if (uid){
             database.ref().child("monkeys").update({[uid]:response})
