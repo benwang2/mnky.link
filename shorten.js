@@ -1,18 +1,18 @@
-var __AUTH_DOMAIN = "mnky-link"
-var __DB_URL = "mnky-link-default-rtdb"
+const Database = require("@replit/database")
+const db = new Database()
 
-var axios = require('axios')
 var firebase = require("firebase")
 var config = {
     apiKey: "apiKey",
-    authDomain: __AUTH_DOMAIN+".firebaseapp.com",
-    databaseURL: "https://"+__DB_URL+".firebaseio.com",
+    authDomain: process.env.__AUTH_DOMAIN+".firebaseapp.com",
+    databaseURL: "https://"+process.env.__DB_URL+".firebaseio.com",
     storageBucket: "bucket.appspot.com"
 };
 
 firebase.initializeApp(config);
 
 var database = firebase.database();
+var axios = require('axios')
 
 function exists(GUID){
     return database.ref().child("monkeys").child(GUID).get().then(function(snapshot){
@@ -25,23 +25,26 @@ function exists(GUID){
 }
 
 let urlRegEx = new RegExp(/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi);
-let characters = "🙊,🙉,🙈,🐒,🐵,🍌​​".split(",")
+let characters = "🙊,🙉,🙈,🐒,🐵,🍌,💩​​".split(",")
 
-async function isValidUrl(url){
+async function getValidUrl(url){
     if (url.trim()=="") return false;
     if (!url.match(urlRegEx)) return false;
 
-    let test1, test2;
     if (url.substring(0,6)!="https:" && url.substring(0,5)!="http:") {
-        test1 = "https://" + url;
-        test2 = "http://" + url;
+        let [test1, test2, validUrl] = ["https://" + url, "http://" + url, false];
+        try {
+            let res1 = await axios.get(test1)
+            let res2 = await axios.get(test2)
+            validUrl = (res1 != null ? test1 : (res2 != null ? test2 : false));
+        } catch (e) {
+            validUrl = e.request.finished ? e.request.protocol+"//"+e.request.host : false
+        }
+        return validUrl
+    } else {
+        let res1 = await axios.get(url)
+        return (res1 != null ? url : false)
     }
-    
-    let res1 = await axios.get(test1)
-    let res2 = await axios.get(test2)
-
-    console.log((res1 != null ? res1 : (res2 != null ? res2 : false)))
-    return (res1 != null ? res1 : (res2 != null ? res2 : false));
 }
 
 async function genUID(){
@@ -58,11 +61,17 @@ async function genUID(){
 }
 
 async function generate(url){
-    let response = await isValidUrl (url);
-    if (response != null){
+    let response = await getValidUrl (url);
+    console.log("url is: "+response)
+    if (response != null && response != false){
+        console.log('passed response check')
         let uid = await genUID();
         if (uid){
             database.ref().child("monkeys").update({[uid]:response})
+            db.get("linksGenerated").then(value => {
+              db.set("linksGenerated", ++value);
+              console.log("linksGenerated: "+(value))
+            });
             return uid;
         } else {
             return 504

@@ -9,6 +9,7 @@ const rateLimit = require("express-rate-limit");
 app.use("/shorten", rateLimit({windowMs: 5 * 1000,max: 10}));
 
 app.use(express.json({limit:'1mb'}))
+
 app.post("/shorten", async (request, response) => {
     try {
         let destination = request.body.url
@@ -37,11 +38,15 @@ app.get("/:monkeys", async (request, response) => {
     try {
         let monkeys = request.params.monkeys;
         let destination = await shorten.exists(monkeys)
+        console.log(monkeys+":"+destination)
         if (destination){
             response.redirect(destination)
-        } else {response.redirect("/")}
+        } else {
+            response.redirect("/")
+        }
     } catch (e) {
         console.log(e)
+        response.redirect("/")
     }
 })
 
